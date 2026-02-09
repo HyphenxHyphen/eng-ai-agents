@@ -1,6 +1,6 @@
 Assignment 1
 
-Submitted 2/8 23:59 (README.md written 2/9 00:14)
+Submitted 2/8 23:59 (README.md last edited 2/9 00:15)
 
 
 
@@ -8,7 +8,7 @@ Instructions on how to run the code:
 
 assignments/assignment-1/01-assignment-part-1.ipynb contains an older version of the assignment.
 
-Only after did I realize I accidentally saved assignment 1 to notebooks/assignments/assignment-1/01-assignment-part-1.ipynb.
+Only after I saved did I realize I accidentally saved assignment 1 to notebooks/assignments/assignment-1/01-assignment-part-1.ipynb.
 
 I have elected to leave the correct file in notebooks/assignments/assignment-1/ for now as to preserve the edited time stamp.
 
