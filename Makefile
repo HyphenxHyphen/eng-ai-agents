@@ -21,7 +21,7 @@ PYTHON := $(shell \
 # Create venv with access to system packages (from stage 0 container)
 $(VENV_DIR)/bin/activate:
 	rm -rf $(VENV_DIR)
-	$(UV) venv $(VENV_DIR) --python $(PYTHON) --system-site-packages
+	$(UV) venv $(VENV_DIR) --python3 $(PYTHON) --system-site-packages
 
 venv: $(VENV_DIR)/bin/activate
 
