@@ -1,15 +1,21 @@
-from datasets import Dataset, Image
+import pandas as pd
 import os
 
-# 1. Create a list of dictionaries with image paths, not bytes yet
-data = {
-    "image": [f"detections/{img}" for img in os.listdir('detections/') if img.endswith(('.jpg', '.png'))],
-    "label": ["drone"] * len(os.listdir('detections/')) # adjust if multiple files exist
-}
+data = []
+img_dir = 'assignments/assignment-3/detections' 
 
-# 2. Convert to a HF Dataset and "cast" the column to Image type
-ds = Dataset.from_dict(data)
-ds = ds.cast_column("image", Image())
+for img_name in os.listdir(img_dir):
+    if img_name.endswith(('.jpg', '.png')):
+        with open(os.path.join(img_dir, img_name), 'rb') as f:
+            image_bytes = f.read()
+        
+        data.append({
+            "image": {"bytes": image_bytes, "path": img_name},
+            "label": "drone",
+            "video_source": img_name.split('_')[0]
+        })
 
-# 3. Save to Parquet - this handles the bytes correctly!
-ds.to_parquet("drone_detections.parquet")
+df = pd.DataFrame(data)
+df.to_parquet("drone_detections.parquet", engine='pyarrow')
+
+print("Done")
