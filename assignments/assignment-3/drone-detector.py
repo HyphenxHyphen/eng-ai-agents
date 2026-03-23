@@ -1,11 +1,3 @@
-from ultralytics import YOLO
-
-def train_model():
-    model = YOLO('yolov8n.pt')
-    model.train(data='drone-config.yaml', epochs=10, imgsz=640, batch=16, workers=4, name='drone_detector')
-
-#train_model()
-
 import os
 import cv2
 import numpy as np
@@ -14,20 +6,25 @@ from ultralytics import YOLO
 from filterpy.kalman import KalmanFilter
 from collections import deque
 
-# --- CONFIGURATION ---
+# Train model
+def train_model():
+    model = YOLO('yolov8n.pt')
+    model.train(data='drone-config.yaml', epochs=10, imgsz=640, batch=16, workers=4, name='drone_detector')
+
+# configs
 MODEL_PATH = 'runs/detect/drone_detector5/weights/best.pt'
-VIDEO_DIR = 'drone_videos/'
+VIDEO_DIR = 'drone_videos/' # Processes ALL .MP4 files in this folder
 IMG_OUTPUT_DIR = 'detections/'
 VIDEO_OUTPUT_DIR = 'processed_outputs/'
 
-# Ensure directories exist
+# ensure directories exist
 for d in [IMG_OUTPUT_DIR, VIDEO_OUTPUT_DIR]:
     os.makedirs(d, exist_ok=True)
 
 # --- KALMAN TRACKER CLASS ---
 class DroneTracker:
     def __init__(self, initial_bbox):
-        # State: [x, y, w, h, vx, vy]
+        # State: [x, y, w, h, ~u, ~v]
         self.kf = KalmanFilter(dim_x=6, dim_z=4)
         
         # F: State Transition Matrix (Constant Velocity Model)
@@ -68,7 +65,7 @@ class DroneTracker:
         self.kf.update(np.array(detection))
         self.missed_frames = 0
 
-# --- MAIN EXECUTION ---
+# main pipeline
 def run_pipeline():
     model = YOLO(MODEL_PATH)
     
@@ -78,7 +75,7 @@ def run_pipeline():
         print(f"--- Processing: {video_name} ---")
         cap = cv2.VideoCapture(os.path.join(VIDEO_DIR, video_name))
         
-        # VideoWriter Setup (Task 2)
+        # task 2
         width  = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
         height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
         fps    = cap.get(cv2.CAP_PROP_FPS)
@@ -141,4 +138,5 @@ def run_pipeline():
         print(f"Done. Video saved to: {out_path}")
 
 if __name__ == "__main__":
+    #train_model()
     run_pipeline()
