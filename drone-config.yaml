@@ -1,0 +1,6 @@
+path: ./drone_data
+train: train/images
+val: test/images
+
+names:
+  0: drone
